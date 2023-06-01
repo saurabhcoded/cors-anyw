@@ -1,13 +1,21 @@
 const express = require('express');
-const corsAnywhere = require('cors-anywhere');
+const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
+app.use(cors());
 
-// Enable CORS for all routes
-app.use(corsAnywhere());
+app.get('/:url(*)', async (req, res) => {
+  try {
+    const { url } = req.params;
+    const response = await axios.get(url);
+    res.send(response.data);
+  } catch (error) {
+    res.status(500).send('Error occurred while fetching data.');
+  }
+});
 
-// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Proxy server listening on port ${PORT}`);
+  console.log(`CORS Proxy Server listening on port ${PORT}`);
 });
